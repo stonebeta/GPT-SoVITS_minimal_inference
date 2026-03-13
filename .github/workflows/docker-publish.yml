@@ -47,7 +47,6 @@ jobs:
             platform: linux/amd64
             flavor: |
               latest=false
-              suffix=""
 
           - id: cpu
             dockerfile: docker/Dockerfile-cpu
