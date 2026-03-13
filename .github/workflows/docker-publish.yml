@@ -42,39 +42,26 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - id: gpu-amd64
+          - id: gpu
             dockerfile: docker/Dockerfile
             platform: linux/amd64
             flavor: |
               latest=false
+              suffix=""
 
-          - id: cpu-amd64
+          - id: cpu
             dockerfile: docker/Dockerfile-cpu
-            platform: linux/amd64
+            platform: linux/amd64,linux/arm64
             flavor: |
               latest=false
-              suffix=-cpu-amd64
+              suffix=-cpu
 
-          - id: cpu-arm64
-            dockerfile: docker/Dockerfile-cpu
-            platform: linux/arm64
-            flavor: |
-              latest=false
-              suffix=-cpu-arm64
     
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Free disk space
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/hostedtoolcache
-          docker system prune -af
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -84,9 +71,7 @@ jobs:
           name: assets
           path: assets
 
-      # arm64 build 使用 qemu
       - name: Set up QEMU
-        if: matrix.id == 'cpu-arm64'
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
@@ -117,7 +102,7 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           push: true
-          # platforms: ${{ matrix.platform }}
+          platforms: ${{ matrix.platform }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
