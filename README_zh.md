@@ -163,6 +163,76 @@ python onnx2trt.py --help
 
 ---
 
+## 🐳 Docker 部署
+
+> ⚠️ **注意**：当前 Docker 部署仅支持基于 PyTorch 的 API 服务。
+
+使用预构建的 Docker 镜像快速部署（支持 GPU / CPU）。
+
+------------------------------------------------------------------------
+
+### 使用预构建镜像运行（推荐）
+
+#### 1. 拉取预构建镜像
+
+``` bash
+# GPU 版本
+docker pull ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest
+
+# CPU 版本
+docker pull ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest-cpu
+```
+
+------------------------------------------------------------------------
+
+#### 2. 运行 API 服务
+
+##### GPU
+
+``` bash
+docker run -d \
+  --gpus all \
+  -p 8000:8000 \
+  -v /path/to/host/config:/app/config \
+  -v /path/to/host/models:/path/to/models \
+  ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest
+```
+
+##### CPU
+
+``` bash
+docker run -d \
+  -p 8000:8000 \
+  -v /path/to/host/config:/app/config \
+  -v /path/to/host/models:/path/to/models \
+  ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest-cpu
+```
+
+------------------------------------------------------------------------
+
+### 🛠️ 本地构建
+
+如果你希望自行构建镜像：
+
+#### 1. 准备资源
+
+``` bash
+chmod +x prepare_assets.sh
+./prepare_assets.sh
+```
+
+#### 2. 构建镜像
+
+``` bash
+# GPU 镜像
+docker build -f docker/Dockerfile -t gpt-sovits-gpu:latest .
+
+# CPU 镜像
+docker build -f docker/Dockerfile-cpu -t gpt-sovits-cpu:latest .
+```
+
+---
+
 ## 🛠️ SDK
 
 C++: [GPT-SoVITS-Devel/GPT-SoVITS-cpp](https://github.com/GPT-SoVITS-Devel/GPT-SoVITS-cpp)
@@ -178,7 +248,7 @@ C++: [GPT-SoVITS-Devel/GPT-SoVITS-cpp](https://github.com/GPT-SoVITS-Devel/GPT-S
     - [x] C++ SDK
     - [ ] Rust / Golang / Android Wrapper
 - [ ] **V3 / V4** 模型快速适配
-- [ ] **Docker** 一键部署镜像
+- [x] **Docker** 一键部署镜像
 
 ---
 

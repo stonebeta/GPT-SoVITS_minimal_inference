@@ -167,6 +167,76 @@ If you're tired of staring at the terminal or want your backend to talk to this 
 
 ---
 
+## 🐳 Docker Deployment
+
+> ⚠️ **Note**: Docker deployment currently supports only the PyTorch-based API servicey.
+
+Deploy quickly using pre-built Docker images (GPU / CPU supported).
+
+---
+
+### Run with Pre-built Images (Recommended)
+
+#### 1. Pull Pre-built Images
+
+```bash
+# GPU version
+docker pull ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest
+
+# CPU version
+docker pull ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest-cpu
+```
+
+---
+
+#### 2. Run API Service
+
+##### GPU
+
+```bash
+docker run -d \
+  --gpus all \
+  -p 8000:8000 \
+  -v /path/to/host/config:/app/config \
+  -v /path/to/host/models:/path/to/models \
+  ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest
+```
+
+##### CPU
+
+```bash
+docker run -d \
+  -p 8000:8000 \
+  -v /path/to/host/config:/app/config \
+  -v /path/to/host/models:/path/to/models \
+  ghcr.io/stonebeta/GPT-SoVITS_minimal_inference:latest-cpu
+```
+
+---
+
+### 🛠️ Build Locally
+
+If you prefer building the image yourself:
+
+#### 1. Prepare Assets
+
+```bash
+chmod +x prepare_assets.sh
+./prepare_assets.sh
+```
+
+#### 2. Build Image
+
+```bash
+# GPU image
+docker build -f docker/Dockerfile -t gpt-sovits-gpu:latest .
+
+# CPU image
+docker build -f docker/Dockerfile-cpu -t gpt-sovits-cpu:latest .
+```
+
+---
+
 ## 🛠️ SDK
 
 C++: [GPT-SoVITS-Devel/GPT-SoVITS-cpp](https://github.com/GPT-SoVITS-Devel/GPT-SoVITS-cpp)
@@ -182,7 +252,7 @@ C++: [GPT-SoVITS-Devel/GPT-SoVITS-cpp](https://github.com/GPT-SoVITS-Devel/GPT-S
     - [x] C++ SDK (In development)
     - [ ] Rust / Golang / Android Wrapper
 - [ ] **V3 / V4** model adaptation
-- [ ] **Docker** one-click deployment image
+- [x] **Docker** one-click deployment image
 
 ---
 
